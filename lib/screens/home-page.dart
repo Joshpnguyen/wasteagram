@@ -42,7 +42,6 @@ class _MyHomePageState extends State<MyHomePage> {
           alignment: Alignment.bottomCenter,
           child: FloatingActionButton(
             onPressed: () {},
-            tooltip: 'Increment',
             child: Icon(Icons.camera_alt),
           ),
         ));
