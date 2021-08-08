@@ -35,20 +35,31 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    if (posts.isEmpty) {
+      return loading();
+    } else {
+      return Scaffold(
+        appBar: AppBar(
+          title:
+              Center(child: Text(widget.title, style: TextStyle(fontSize: 22))),
+        ),
+        body: scrollingPostsList(),
+        floatingActionButton: FloatingActionButton(
+          onPressed: getImage,
+          child: Icon(Icons.camera_alt),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      );
+    }
+  }
+
+  Widget loading() {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title:
+            Center(child: Text(widget.title, style: TextStyle(fontSize: 22))),
       ),
-      body: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-          ],
-        ),
-      ),
+      body: Center(child: CircularProgressIndicator()),
       floatingActionButton: FloatingActionButton(
         onPressed: getImage,
         child: Icon(Icons.camera_alt),
@@ -57,3 +68,106 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+Widget scrollingPostsList() {
+  return ListView.builder(
+      itemCount: posts.length,
+      itemBuilder: (BuildContext context, int index) {
+        return Padding(
+          padding: const EdgeInsets.all(3),
+          child: ListTile(
+            title: Text(
+              posts[index].date,
+              style: TextStyle(fontSize: 22),
+            ),
+            trailing: Text(
+              posts[index].number,
+              style: TextStyle(fontSize: 24),
+            ),
+          ),
+        );
+      });
+}
+
+List<Post> posts = [
+  Post(
+    date: "Sunday, August 8, 2021",
+    numberWasted: 7,
+  ),
+  Post(
+    date: "Sunday, August 8, 2021",
+    numberWasted: 5,
+  ),
+  Post(
+    date: "Sunday, August 8, 2021",
+    numberWasted: 5,
+  ),
+  Post(
+    date: "Sunday, August 8, 2021",
+    numberWasted: 5,
+  ),
+  Post(
+    date: "Sunday, August 8, 2021",
+    numberWasted: 7,
+  ),
+  Post(
+    date: "Sunday, August 8, 2021",
+    numberWasted: 5,
+  ),
+  Post(
+    date: "Sunday, August 8, 2021",
+    numberWasted: 5,
+  ),
+  Post(
+    date: "Sunday, August 8, 2021",
+    numberWasted: 5,
+  ),
+  Post(
+    date: "Sunday, August 8, 2021",
+    numberWasted: 7,
+  ),
+  Post(
+    date: "Sunday, August 8, 2021",
+    numberWasted: 5,
+  ),
+  Post(
+    date: "Sunday, August 8, 2021",
+    numberWasted: 5,
+  ),
+  Post(
+    date: "Sunday, August 8, 2021",
+    numberWasted: 5,
+  ),
+  Post(
+    date: "Sunday, August 8, 2021",
+    numberWasted: 7,
+  ),
+  Post(
+    date: "Sunday, August 8, 2021",
+    numberWasted: 5,
+  ),
+  Post(
+    date: "Sunday, August 8, 2021",
+    numberWasted: 5,
+  ),
+  Post(
+    date: "Sunday, August 8, 2021",
+    numberWasted: 5,
+  ),
+  Post(
+    date: "Sunday, August 8, 2021",
+    numberWasted: 7,
+  ),
+  Post(
+    date: "Sunday, August 8, 2021",
+    numberWasted: 5,
+  ),
+  Post(
+    date: "Sunday, August 8, 2021",
+    numberWasted: 5,
+  ),
+  Post(
+    date: "Sunday, August 8, 2021",
+    numberWasted: 5,
+  )
+];

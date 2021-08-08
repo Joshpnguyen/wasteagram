@@ -14,4 +14,6 @@ class Post {
       this.longitude = "",
       this.latitude = "",
       this.imageURL = ""});
+
+  String get number => numberWasted.toString();
 }
