@@ -40,7 +40,9 @@ class _NewPostState extends State<NewPost> {
           height: 70,
           child: ElevatedButton(
             child: Icon(Icons.upload),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pop(context);
+            },
           ),
         )),
       ),
