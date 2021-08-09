@@ -10,4 +10,5 @@ export 'main.dart';
 export 'screens/details-screen.dart';
 export 'screens/home-screen.dart';
 export 'screens/new-post.dart';
+export 'src/new-post-args.dart';
 export 'src/post-model.dart';

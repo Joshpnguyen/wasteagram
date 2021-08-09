@@ -1,6 +1,11 @@
 import 'package:wasteagram/exports.dart';
 
 class MyApp extends StatelessWidget {
+  static final routes = {
+    'new post': (context) => NewPost(),
+    'detail screen': (context) => DetailScreen()
+  };
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -8,6 +13,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.dark(),
       debugShowCheckedModeBanner: false,
       home: MyHomePage(title: 'Wasteagram'),
+      routes: routes,
     );
   }
 }
@@ -26,13 +32,20 @@ class _MyHomePageState extends State<MyHomePage> {
   final picker = ImagePicker();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  void getImage() async {
+  Future<String> uploadImage() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     image = File(pickedFile!.path);
     if (image == null) {
       print('No image picked');
     }
-    setState(() {});
+
+    var filename = DateTime.now().toString() + '.jpg';
+    Reference storageReference = FirebaseStorage.instance.ref().child(filename);
+    UploadTask uploadTask = storageReference.putFile(image!);
+    await uploadTask;
+    final url = await storageReference.getDownloadURL();
+    print(url);
+    return url;
   }
 
   @override
@@ -44,7 +57,10 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: scrollingPostsList(),
       floatingActionButton: FloatingActionButton(
-        onPressed: getImage,
+        onPressed: () {
+          var imageURL = uploadImage();
+          Navigator.pushNamed(context, 'new post');
+        },
         child: Icon(Icons.camera_alt),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -80,7 +96,7 @@ Widget buildListItem(BuildContext context, AsyncSnapshot snapshot) {
               ),
               trailing: Text(
                 post['numberWasted'].toString(),
-                style: TextStyle(fontSize: 24),
+                style: TextStyle(fontSize: 23),
               ),
             ),
           );
@@ -89,86 +105,3 @@ Widget buildListItem(BuildContext context, AsyncSnapshot snapshot) {
     return Center(child: CircularProgressIndicator());
   }
 }
-
-List<Post> posts = [
-  Post(
-    date: "Sunday, August 8, 2021",
-    numberWasted: 7,
-  ),
-  Post(
-    date: "Sunday, August 8, 2021",
-    numberWasted: 5,
-  ),
-  Post(
-    date: "Sunday, August 8, 2021",
-    numberWasted: 5,
-  ),
-  Post(
-    date: "Sunday, August 8, 2021",
-    numberWasted: 5,
-  ),
-  Post(
-    date: "Sunday, August 8, 2021",
-    numberWasted: 7,
-  ),
-  Post(
-    date: "Sunday, August 8, 2021",
-    numberWasted: 5,
-  ),
-  Post(
-    date: "Sunday, August 8, 2021",
-    numberWasted: 5,
-  ),
-  Post(
-    date: "Sunday, August 8, 2021",
-    numberWasted: 5,
-  ),
-  Post(
-    date: "Sunday, August 8, 2021",
-    numberWasted: 7,
-  ),
-  Post(
-    date: "Sunday, August 8, 2021",
-    numberWasted: 5,
-  ),
-  Post(
-    date: "Sunday, August 8, 2021",
-    numberWasted: 5,
-  ),
-  Post(
-    date: "Sunday, August 8, 2021",
-    numberWasted: 5,
-  ),
-  Post(
-    date: "Sunday, August 8, 2021",
-    numberWasted: 7,
-  ),
-  Post(
-    date: "Sunday, August 8, 2021",
-    numberWasted: 5,
-  ),
-  Post(
-    date: "Sunday, August 8, 2021",
-    numberWasted: 5,
-  ),
-  Post(
-    date: "Sunday, August 8, 2021",
-    numberWasted: 5,
-  ),
-  Post(
-    date: "Sunday, August 8, 2021",
-    numberWasted: 7,
-  ),
-  Post(
-    date: "Sunday, August 8, 2021",
-    numberWasted: 5,
-  ),
-  Post(
-    date: "Sunday, August 8, 2021",
-    numberWasted: 5,
-  ),
-  Post(
-    date: "Sunday, August 8, 2021",
-    numberWasted: 5,
-  )
-];
