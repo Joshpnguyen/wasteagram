@@ -1,7 +1,10 @@
 import 'package:wasteagram/exports.dart';
+import 'package:intl/intl.dart';
 
 class NewPost extends StatefulWidget {
   const NewPost({Key? key}) : super(key: key);
+
+  static const routeName = '/extractArgs';
 
   @override
   _NewPostState createState() => _NewPostState();
@@ -10,13 +13,15 @@ class NewPost extends StatefulWidget {
 class _NewPostState extends State<NewPost> {
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments as NewPostArguments;
+
     return Scaffold(
       appBar: AppBar(
         title: Center(child: Text('New Post', style: TextStyle(fontSize: 22))),
       ),
       body: Column(
         children: [
-          Flexible(flex: 10, child: (Container())),
+          Flexible(flex: 15, child: (Container(child: Image.file(args.image)))),
           Flexible(
             flex: 10,
             child: Padding(

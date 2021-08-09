@@ -2,7 +2,7 @@ import 'package:wasteagram/exports.dart';
 
 class MyApp extends StatelessWidget {
   static final routes = {
-    'new post': (context) => NewPost(),
+    NewPost.routeName: (context) => const NewPost(),
     'detail screen': (context) => DetailScreen()
   };
 
@@ -28,20 +28,17 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  File? image;
+  late File image;
   final picker = ImagePicker();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   Future<String> uploadImage() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     image = File(pickedFile!.path);
-    if (image == null) {
-      print('No image picked');
-    }
 
     var filename = DateTime.now().toString() + '.jpg';
     Reference storageReference = FirebaseStorage.instance.ref().child(filename);
-    UploadTask uploadTask = storageReference.putFile(image!);
+    UploadTask uploadTask = storageReference.putFile(image);
     await uploadTask;
     final url = await storageReference.getDownloadURL();
     print(url);
@@ -57,9 +54,11 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: scrollingPostsList(),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          var imageURL = uploadImage();
-          Navigator.pushNamed(context, 'new post');
+        onPressed: () async {
+          var imageURL = await uploadImage();
+          Navigator.pushNamed(context, NewPost.routeName,
+              arguments:
+                  NewPostArguments(imageURL.toString(), firestore, image));
         },
         child: Icon(Icons.camera_alt),
       ),
