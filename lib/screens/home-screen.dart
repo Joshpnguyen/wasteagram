@@ -37,31 +37,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    if (posts.isEmpty) {
-      return loading();
-    } else {
-      return Scaffold(
-        appBar: AppBar(
-          title:
-              Center(child: Text(widget.title, style: TextStyle(fontSize: 22))),
-        ),
-        body: scrollingPostsList(),
-        floatingActionButton: FloatingActionButton(
-          onPressed: getImage,
-          child: Icon(Icons.camera_alt),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      );
-    }
-  }
-
-  Widget loading() {
     return Scaffold(
       appBar: AppBar(
         title:
             Center(child: Text(widget.title, style: TextStyle(fontSize: 22))),
       ),
-      body: Center(child: CircularProgressIndicator()),
+      body: scrollingPostsList(),
       floatingActionButton: FloatingActionButton(
         onPressed: getImage,
         child: Icon(Icons.camera_alt),
@@ -71,19 +52,21 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget scrollingPostsList() {
+    Stream postStream =
+        FirebaseFirestore.instance.collection('Wasteagram Posts').snapshots();
+
     return StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection('Wasteagram Posts')
-            .snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        stream: postStream,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
           return buildListItem(context, snapshot);
         });
   }
 }
 
-Widget buildListItem(
-    BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-  if (snapshot.hasData) {
+Widget buildListItem(BuildContext context, AsyncSnapshot snapshot) {
+  if (snapshot.hasData &&
+      snapshot.data!.docs != null &&
+      snapshot.data!.docs.length > 0) {
     return ListView.builder(
         itemCount: snapshot.data!.docs.length,
         itemBuilder: (BuildContext context, int index) {
