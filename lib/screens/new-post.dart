@@ -10,6 +10,12 @@ class NewPost extends StatefulWidget {
 class _NewPostState extends State<NewPost> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Column(
+      children: [
+        Flexible(child: (Container())),
+        TextFormField(),
+        ElevatedButton(onPressed: () {}, child: Icon(Icons.upload))
+      ],
+    );
   }
 }

@@ -1,10 +1,12 @@
 export 'dart:io';
 export 'package:cloud_firestore/cloud_firestore.dart';
+export 'package:firebase_core/firebase_core.dart';
 export 'package:firebase_storage/firebase_storage.dart';
 export 'package:flutter/material.dart';
 export 'package:flutter/services.dart';
 export 'package:image_picker/image_picker.dart';
 export 'package:location/location.dart';
+export 'main.dart';
 export 'screens/details-screen.dart';
 export 'screens/home-screen.dart';
 export 'screens/new-post.dart';

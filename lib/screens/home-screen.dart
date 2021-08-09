@@ -6,6 +6,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Wasteagram',
       theme: ThemeData.dark(),
+      debugShowCheckedModeBanner: false,
       home: MyHomePage(title: 'Wasteagram'),
     );
   }
@@ -23,6 +24,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   File? image;
   final picker = ImagePicker();
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   void getImage() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -67,26 +69,42 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
+
+  Widget scrollingPostsList() {
+    return StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection('Wasteagram Posts')
+            .snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          return buildListItem(context, snapshot);
+        });
+  }
 }
 
-Widget scrollingPostsList() {
-  return ListView.builder(
-      itemCount: posts.length,
-      itemBuilder: (BuildContext context, int index) {
-        return Padding(
-          padding: const EdgeInsets.all(3),
-          child: ListTile(
-            title: Text(
-              posts[index].date,
-              style: TextStyle(fontSize: 22),
+Widget buildListItem(
+    BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+  if (snapshot.hasData) {
+    return ListView.builder(
+        itemCount: snapshot.data!.docs.length,
+        itemBuilder: (BuildContext context, int index) {
+          var post = snapshot.data!.docs[index];
+          return Padding(
+            padding: const EdgeInsets.all(3),
+            child: ListTile(
+              title: Text(
+                post['date'],
+                style: TextStyle(fontSize: 22),
+              ),
+              trailing: Text(
+                post['numberWasted'].toString(),
+                style: TextStyle(fontSize: 24),
+              ),
             ),
-            trailing: Text(
-              posts[index].number,
-              style: TextStyle(fontSize: 24),
-            ),
-          ),
-        );
-      });
+          );
+        });
+  } else {
+    return Center(child: CircularProgressIndicator());
+  }
 }
 
 List<Post> posts = [

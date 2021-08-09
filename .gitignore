@@ -30,8 +30,6 @@
 .pub-cache/
 .pub/
 /build/
-/lib/camera_screen.dart
-/lib/share_location_screen.dart
 
 # Web related
 lib/generated_plugin_registrant.dart
