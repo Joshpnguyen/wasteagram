@@ -11,6 +11,20 @@ class NewPost extends StatefulWidget {
 }
 
 class _NewPostState extends State<NewPost> {
+  late LocationData locationData;
+
+  @override
+  void initState() {
+    super.initState();
+    retrieveLocation();
+  }
+
+  void retrieveLocation() async {
+    var locationService = Location();
+    locationData = await locationService.getLocation();
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as NewPostArguments;
@@ -32,6 +46,7 @@ class _NewPostState extends State<NewPost> {
                       border: OutlineInputBorder())),
             ),
           ),
+          Text('${}')
         ],
       ),
       bottomNavigationBar: SafeArea(
@@ -41,6 +56,8 @@ class _NewPostState extends State<NewPost> {
           child: ElevatedButton(
             child: Icon(Icons.upload),
             onPressed: () {
+              // TODO: implement the below
+              uploadPost(imageURL, numberWasted, locationData.longitude, locationData.latitude)
               Navigator.pop(context);
             },
           ),
@@ -50,10 +67,12 @@ class _NewPostState extends State<NewPost> {
   }
 }
 
-void uploadPost(String imageURL, int numberWasted) {
+void uploadPost(String imageURL, int numberWasted, double? longitude, double? latitude) {
   FirebaseFirestore.instance.collection('Wasteagram Post').add({
     'imageURL': imageURL,
     'date': DateFormat('EEEE, MMMM d, y').format(DateTime.now()),
     'numberWasted': numberWasted,
+    'longitude': longitude,
+    'latitude': latitude
   });
 }
