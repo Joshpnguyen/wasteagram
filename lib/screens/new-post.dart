@@ -28,6 +28,7 @@ class _NewPostState extends State<NewPost> {
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as NewPostArguments;
+    late int numberWasted;
 
     return Scaffold(
       appBar: AppBar(
@@ -43,10 +44,20 @@ class _NewPostState extends State<NewPost> {
               child: TextFormField(
                   decoration: InputDecoration(
                       labelText: 'Number of Wasted Items',
-                      border: OutlineInputBorder())),
+                      border: OutlineInputBorder()),
+                  onSaved: (value) {
+                    value = value ?? '';
+                    numberWasted = int.parse(value);
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a number';
+                    } else {
+                      return null;
+                    }
+                  }),
             ),
           ),
-          Text('${}')
         ],
       ),
       bottomNavigationBar: SafeArea(
@@ -56,8 +67,8 @@ class _NewPostState extends State<NewPost> {
           child: ElevatedButton(
             child: Icon(Icons.upload),
             onPressed: () {
-              // TODO: implement the below
-              uploadPost(imageURL, numberWasted, locationData.longitude, locationData.latitude)
+              uploadPost(args.imageURL, numberWasted, locationData.longitude,
+                  locationData.latitude);
               Navigator.pop(context);
             },
           ),
@@ -67,7 +78,8 @@ class _NewPostState extends State<NewPost> {
   }
 }
 
-void uploadPost(String imageURL, int numberWasted, double? longitude, double? latitude) {
+void uploadPost(
+    String imageURL, int numberWasted, double? longitude, double? latitude) {
   FirebaseFirestore.instance.collection('Wasteagram Post').add({
     'imageURL': imageURL,
     'date': DateFormat('EEEE, MMMM d, y').format(DateTime.now()),
