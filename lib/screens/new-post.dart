@@ -15,76 +15,87 @@ class _NewPostState extends State<NewPost> {
 
   @override
   void initState() {
-    super.initState();
     retrieveLocation();
+    super.initState();
   }
 
-  void retrieveLocation() async {
+  Future retrieveLocation() async {
     var locationService = Location();
     locationData = await locationService.getLocation();
-    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as NewPostArguments;
-    late int numberWasted;
+    int numberWasted = 0;
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Center(child: Text('New Post', style: TextStyle(fontSize: 22))),
-      ),
-      body: Column(
-        children: [
-          Flexible(flex: 15, child: (Container(child: Image.file(args.image)))),
-          Flexible(
-            flex: 10,
-            child: Padding(
-              padding: const EdgeInsets.all(14.0),
-              child: TextFormField(
-                  decoration: InputDecoration(
-                      labelText: 'Number of Wasted Items',
-                      border: OutlineInputBorder()),
-                  onSaved: (value) {
-                    value = value ?? '';
-                    numberWasted = int.parse(value);
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a number';
-                    } else {
-                      return null;
-                    }
-                  }),
-            ),
-          ),
-        ],
-      ),
-      bottomNavigationBar: SafeArea(
-        child: BottomAppBar(
-            child: Container(
-          height: 70,
-          child: ElevatedButton(
-            child: Icon(Icons.upload),
-            onPressed: () {
-              uploadPost(args.imageURL, numberWasted, locationData.longitude,
-                  locationData.latitude);
-              Navigator.pop(context);
-            },
-          ),
-        )),
-      ),
-    );
+    return FutureBuilder(
+        future: retrieveLocation(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else {
+            return Scaffold(
+              appBar: AppBar(
+                title: Center(
+                    child: Text('New Post', style: TextStyle(fontSize: 22))),
+              ),
+              body: Column(
+                children: [
+                  Flexible(
+                      flex: 15,
+                      child: (Container(child: Image.file(args.image)))),
+                  Flexible(
+                    flex: 10,
+                    child: Padding(
+                      padding: const EdgeInsets.all(14.0),
+                      child: TextFormField(
+                          decoration: InputDecoration(
+                              labelText: 'Number of Wasted Items',
+                              border: OutlineInputBorder()),
+                          onSaved: (value) {
+                            value = value ?? '';
+                            numberWasted = int.parse(value);
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter a number';
+                            } else {
+                              return null;
+                            }
+                          }),
+                    ),
+                  ),
+                ],
+              ),
+              bottomNavigationBar: SafeArea(
+                child: BottomAppBar(
+                    child: Container(
+                  height: 70,
+                  child: ElevatedButton(
+                    child: Icon(Icons.upload),
+                    onPressed: () {
+                      uploadPost(args.imageURL, numberWasted,
+                          locationData.longitude, locationData.latitude);
+                      Navigator.pop(context);
+                    },
+                  ),
+                )),
+              ),
+            );
+          }
+        });
   }
-}
 
-void uploadPost(
-    String imageURL, int numberWasted, double? longitude, double? latitude) {
-  FirebaseFirestore.instance.collection('Wasteagram Post').add({
-    'imageURL': imageURL,
-    'date': DateFormat('EEEE, MMMM d, y').format(DateTime.now()),
-    'numberWasted': numberWasted,
-    'longitude': longitude,
-    'latitude': latitude
-  });
+  void uploadPost(
+      String imageURL, int numberWasted, double? longitude, double? latitude) {
+    FirebaseFirestore.instance.collection('Wasteagram Posts').add({
+      'imageURL': imageURL,
+      'date': DateFormat('EEEE, MMMM d, y').format(DateTime.now()),
+      'numberWasted': numberWasted,
+      'longitude': longitude,
+      'latitude': latitude
+    });
+  }
 }
