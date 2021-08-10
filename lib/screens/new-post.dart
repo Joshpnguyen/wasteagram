@@ -49,3 +49,11 @@ class _NewPostState extends State<NewPost> {
     );
   }
 }
+
+void uploadPost(String imageURL, int numberWasted) {
+  FirebaseFirestore.instance.collection('Wasteagram Post').add({
+    'imageURL': imageURL,
+    'date': DateFormat('EEEE, MMMM d, y').format(DateTime.now()),
+    'numberWasted': numberWasted,
+  });
+}
