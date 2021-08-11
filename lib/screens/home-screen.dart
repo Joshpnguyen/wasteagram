@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 class MyApp extends StatelessWidget {
   static final routes = {
     NewPost.routeName: (context) => const NewPost(),
-    'detail screen': (context) => DetailScreen()
+    DetailScreen.routeN: (context) => const DetailScreen(),
   };
 
   @override
@@ -79,6 +79,10 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 // Convert Firestore Timestamp to formatted string
-String parseTimeStamp(Timestamp date) {
-  return DateFormat('EEEE, MMMM d, y').format(date.toDate());
+String parseTimeStamp(Timestamp date, int format) {
+  if (format == 0) {
+    return DateFormat('EEEE, MMMM d, y').format(date.toDate());
+  } else {
+    return DateFormat('EEE, MMMM d, y').format(date.toDate());
+  }
 }

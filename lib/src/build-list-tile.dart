@@ -13,14 +13,22 @@ Widget buildListItem(BuildContext context, AsyncSnapshot snapshot) {
             padding: const EdgeInsets.all(4),
             child: ListTile(
               title: Text(
-                parseTimeStamp(post['date']),
+                parseTimeStamp(post['date'], 0),
                 style: TextStyle(fontSize: 22),
               ),
               trailing: Text(
                 post['numberWasted'].toString(),
                 style: TextStyle(fontSize: 23),
               ),
-              onTap: () {},
+              onTap: () {
+                Navigator.pushNamed(context, DetailScreen.routeN,
+                    arguments: Post(
+                        post['numberWasted'],
+                        parseTimeStamp(post['date'], 1),
+                        post['longitude'],
+                        post['latitude'],
+                        post['imageURL']));
+              },
             ),
           );
         });

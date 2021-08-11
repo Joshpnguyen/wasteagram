@@ -1,19 +1,13 @@
-import 'package:wasteagram/exports.dart';
-
+// Used to send arguments to Detail Screen
 class Post {
   int numberWasted;
   String date;
-  String longitude;
-  String latitude;
+  double longitude;
+  double latitude;
   String imageURL;
-  File? image;
 
-  Post(
-      {this.numberWasted = 0,
-      this.date = "",
-      this.longitude = "",
-      this.latitude = "",
-      this.imageURL = ""});
+  Post(this.numberWasted, this.date, this.longitude, this.latitude,
+      this.imageURL);
 
   String get number => numberWasted.toString();
 }
