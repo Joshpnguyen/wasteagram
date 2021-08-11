@@ -1,5 +1,4 @@
 import 'package:wasteagram/exports.dart';
-import 'package:intl/intl.dart';
 
 class NewPost extends StatefulWidget {
   const NewPost({Key? key}) : super(key: key);
@@ -12,6 +11,7 @@ class NewPost extends StatefulWidget {
 
 class _NewPostState extends State<NewPost> {
   late LocationData locationData;
+  late FieldValue date;
   final numberWastedController = TextEditingController();
 
   @override
@@ -23,6 +23,7 @@ class _NewPostState extends State<NewPost> {
   Future retrieveLocation() async {
     var locationService = Location();
     locationData = await locationService.getLocation();
+    date = FieldValue.serverTimestamp();
   }
 
   @override
@@ -76,11 +77,12 @@ class _NewPostState extends State<NewPost> {
         });
   }
 
-  void uploadPost(
-      String imageURL, int numberWasted, double? longitude, double? latitude) {
+  // sends data to Firestore database
+  void uploadPost(String imageURL, int numberWasted, double? longitude,
+      double? latitude, FieldValue date) {
     FirebaseFirestore.instance.collection('Wasteagram Posts').add({
       'imageURL': imageURL,
-      'date': DateFormat('EEEE, MMMM d, y').format(DateTime.now()),
+      'date': date,
       'numberWasted': numberWasted,
       'longitude': longitude,
       'latitude': latitude
@@ -96,7 +98,8 @@ class _NewPostState extends State<NewPost> {
           child: Icon(Icons.upload),
           onPressed: () {
             uploadPost(args.imageURL, int.parse(numberWastedController.text),
-                locationData.longitude, locationData.latitude);
+                locationData.longitude, locationData.latitude, date);
+            sleep(Duration(milliseconds: 200));
             Navigator.pop(context);
           },
         ),
