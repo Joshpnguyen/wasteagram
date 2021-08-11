@@ -50,29 +50,16 @@ class _NewPostState extends State<NewPost> {
                       flex: 10,
                       child: Padding(
                         padding: const EdgeInsets.all(14.0),
-                        child: TextFormField(
-                            controller: numberWastedController,
-                            decoration: InputDecoration(
-                                labelText: 'Number of Wasted Items',
-                                border: OutlineInputBorder()),
-                            keyboardType: TextInputType.number,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.allow(
-                                  RegExp(r'[0-9]')),
-                            ],
-                            onSaved: (value) {},
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter a number';
-                              } else {
-                                return null;
-                              }
-                            }),
+                        child: numberWastedField(),
                       ),
                     ),
                   ],
                 ),
-                bottomNavigationBar: uploadButton(args));
+                bottomNavigationBar: Semantics(
+                    button: true,
+                    enabled: true,
+                    onTapHint: 'Uploads new post to Wasteagram',
+                    child: uploadButton(args)));
           }
         });
   }
@@ -105,6 +92,26 @@ class _NewPostState extends State<NewPost> {
         ),
       )),
     );
+  }
+
+  // Widget for the number of items wasted texted field
+  Widget numberWastedField() {
+    return TextFormField(
+        controller: numberWastedController,
+        decoration: InputDecoration(
+            labelText: 'Number of Wasted Items', border: OutlineInputBorder()),
+        keyboardType: TextInputType.number,
+        inputFormatters: <TextInputFormatter>[
+          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+        ],
+        onSaved: (value) {},
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter a number';
+          } else {
+            return null;
+          }
+        });
   }
 }
 

@@ -54,13 +54,18 @@ class _MyHomePageState extends State<MyHomePage> {
             Center(child: Text(widget.title, style: TextStyle(fontSize: 22))),
       ),
       body: scrollingPostsList(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          var imageURL = await uploadImage();
-          Navigator.pushNamed(context, NewPost.routeName,
-              arguments: NewPostArguments(imageURL.toString(), image));
-        },
-        child: Icon(Icons.camera_alt),
+      floatingActionButton: Semantics(
+        button: true,
+        enabled: true,
+        onTapHint: 'Select a photo to post',
+        child: FloatingActionButton(
+          onPressed: () async {
+            var imageURL = await uploadImage();
+            Navigator.pushNamed(context, NewPost.routeName,
+                arguments: NewPostArguments(imageURL.toString(), image));
+          },
+          child: Icon(Icons.camera_alt),
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
