@@ -1,4 +1,5 @@
 import 'package:wasteagram/exports.dart';
+import 'package:intl/intl.dart';
 
 class MyApp extends StatelessWidget {
   static final routes = {
@@ -57,8 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: () async {
           var imageURL = await uploadImage();
           Navigator.pushNamed(context, NewPost.routeName,
-              arguments:
-                  NewPostArguments(imageURL.toString(), firestore, image));
+              arguments: NewPostArguments(imageURL.toString(), image));
         },
         child: Icon(Icons.camera_alt),
       ),
@@ -78,29 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-Widget buildListItem(BuildContext context, AsyncSnapshot snapshot) {
-  if (snapshot.hasData &&
-      snapshot.data!.docs != null &&
-      snapshot.data!.docs.length > 0) {
-    return ListView.builder(
-        itemCount: snapshot.data!.docs.length,
-        itemBuilder: (BuildContext context, int index) {
-          var post = snapshot.data!.docs[index];
-          return Padding(
-            padding: const EdgeInsets.all(3),
-            child: ListTile(
-              title: Text(
-                post['date'],
-                style: TextStyle(fontSize: 22),
-              ),
-              trailing: Text(
-                post['numberWasted'].toString(),
-                style: TextStyle(fontSize: 23),
-              ),
-            ),
-          );
-        });
-  } else {
-    return Center(child: CircularProgressIndicator());
-  }
+// Convert Firestore Timestamp to formatted string
+String parseTimeStamp(Timestamp date) {
+  return DateFormat('EEEE, MMMM d, y').format(date.toDate());
 }
