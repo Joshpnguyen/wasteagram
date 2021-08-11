@@ -67,8 +67,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget scrollingPostsList() {
-    Stream postStream =
-        FirebaseFirestore.instance.collection('Wasteagram Posts').snapshots();
+    Stream postStream = FirebaseFirestore.instance
+        .collection('Wasteagram Posts')
+        .orderBy('date', descending: true)
+        .snapshots();
 
     return StreamBuilder(
         stream: postStream,

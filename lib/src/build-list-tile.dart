@@ -33,6 +33,7 @@ Widget buildListItem(BuildContext context, AsyncSnapshot snapshot) {
           );
         });
   } else {
+    // if no posts yet, show cirular progress indicator
     return Center(child: CircularProgressIndicator());
   }
 }
