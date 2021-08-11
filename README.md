@@ -1,16 +1,9 @@
 # wasteagram
 
-A new Flutter project.
+A Dart/Flutter mobile application with a Firebase backend. 
+
+This app gives users the ability to select an image from their device and upload to the server. The number of "food waste" is captured for each image and uploaded along side the image. Posts are shown in a list view on the home screen. Each posts can be tapped on to show an expanded detailed view.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+This project is ready to run on Android OS or iOS.
