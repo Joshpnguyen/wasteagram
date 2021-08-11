@@ -13,6 +13,7 @@ class _NewPostState extends State<NewPost> {
   late LocationData locationData;
   late FieldValue date;
   final numberWastedController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -84,10 +85,12 @@ class _NewPostState extends State<NewPost> {
         child: ElevatedButton(
           child: Icon(Icons.upload),
           onPressed: () {
-            uploadPost(args.imageURL, int.parse(numberWastedController.text),
-                locationData.longitude, locationData.latitude, date);
-            sleep(Duration(milliseconds: 200));
-            Navigator.pop(context);
+            if (formKey.currentState!.validate()) {
+              uploadPost(args.imageURL, int.parse(numberWastedController.text),
+                  locationData.longitude, locationData.latitude, date);
+              sleep(Duration(milliseconds: 200));
+              Navigator.pop(context);
+            }
           },
         ),
       )),
@@ -96,22 +99,26 @@ class _NewPostState extends State<NewPost> {
 
   // Widget for the number of items wasted texted field
   Widget numberWastedField() {
-    return TextFormField(
-        controller: numberWastedController,
-        decoration: InputDecoration(
-            labelText: 'Number of Wasted Items', border: OutlineInputBorder()),
-        keyboardType: TextInputType.number,
-        inputFormatters: <TextInputFormatter>[
-          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-        ],
-        onSaved: (value) {},
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Please enter a number';
-          } else {
-            return null;
-          }
-        });
+    return Form(
+      key: formKey,
+      child: TextFormField(
+          controller: numberWastedController,
+          decoration: InputDecoration(
+              labelText: 'Number of Wasted Items',
+              border: OutlineInputBorder()),
+          keyboardType: TextInputType.number,
+          inputFormatters: <TextInputFormatter>[
+            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+          ],
+          onSaved: (value) {},
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter a number';
+            } else {
+              return null;
+            }
+          }),
+    );
   }
 }
 
